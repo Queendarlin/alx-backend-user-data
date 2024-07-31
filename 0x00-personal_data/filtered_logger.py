@@ -39,7 +39,7 @@ class RedactingFormatter(logging.Formatter):
         """Initialize the formatter with the list of fields to obfuscate.
 
             Args:
-                fields (List[str]): List of fields to obfuscate.
+                fields (List[str]): List of fields to obfuscate.                  ff
         """
         super().__init__(self.FORMAT)
         self.fields = fields
