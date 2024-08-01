@@ -109,3 +109,22 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
                                          host=host,
                                          db=db)
     return connection
+
+
+def log_user_data():
+    """
+    Logs to a secure holberton database to read a users table.
+    """
+    logger = get_logger()
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute("SELECT * FROM users;")
+    columns = [desc[0] for desc in cursor.description]
+    for row in cursor:
+        record = "; ".join(f"{columns[i]}={row[i]}"
+                           for i in range(len(columns)))
+        logger.info(record)
+
+    cursor.close()
+    db.close()
