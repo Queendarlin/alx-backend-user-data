@@ -3,8 +3,10 @@
 Module to obfuscate data using a filtered logger
 """
 import re
+import os
 from typing import List
 import logging
+import mysql.connector
 
 
 def filter_datum(fields: List[str], redaction: str, message: str,
@@ -84,3 +86,24 @@ def get_logger() -> logging.Logger:
     logger.addHandler(handler)
 
     return logger
+
+
+def get_db() -> mysql.connector.connection.MySQLConnection:
+    """
+    Connect to a secure MySQL database using credentials from environment variables.
+
+    Returns:
+        mysql.connector.connection.MySQLConnection: Connection to the MySQL database.
+    """
+    # Get environment variables for database credentials
+    username = os.getenv('PERSONAL_DATA_DB_USERNAME', 'root')
+    password = os.getenv('PERSONAL_DATA_DB_PASSWORD', '')
+    host = os.getenv('PERSONAL_DATA_DB_HOST', 'localhost')
+    db = os.getenv('PERSONAL_DATA_DB_NAME', 'holberton')
+
+    # Connect to the MySQL database
+    connection = mysql.connector.connect(username=username,
+                                         password=password,
+                                         host=host,
+                                         db=db)
+    return connection
