@@ -7,6 +7,9 @@ import os
 from typing import List
 import logging
 import mysql.connector
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 def filter_datum(fields: List[str], redaction: str, message: str,
@@ -90,25 +93,31 @@ def get_logger() -> logging.Logger:
 
 def get_db() -> mysql.connector.connection.MySQLConnection:
     """
-    Connect to a secure MySQL database using credentials
-    from environment variables.
+     Connect to a secure MySQL database using credentials
+     from environment variables.
 
     Returns:
         mysql.connector.connection.MySQLConnection:
         Connection to the MySQL database.
-    """
-    # Get environment variables for database credentials
-    username = os.getenv('PERSONAL_DATA_DB_USERNAME', 'root')
-    password = os.getenv('PERSONAL_DATA_DB_PASSWORD', '')
-    host = os.getenv('PERSONAL_DATA_DB_HOST', 'localhost')
-    db = os.getenv('PERSONAL_DATA_DB_NAME', 'holberton')
 
-    # Connect to the MySQL database
-    connection = mysql.connector.connect(username=username,
-                                         password=password,
-                                         host=host,
-                                         db=db)
-    return connection
+    Raises:
+        ValueError: If critical environment variables are not set.
+    """
+    db_username = os.getenv('PERSONAL_DATA_DB_USERNAME')
+    db_password = os.getenv('PERSONAL_DATA_DB_PASSWORD')
+    db_host = os.getenv('PERSONAL_DATA_DB_HOST')
+    db_name = os.getenv('PERSONAL_DATA_DB_NAME')
+
+    # Check if db_name is set, as it's required
+    if not db_name:
+        raise ValueError("Database name is not set in environment variables.")
+
+    return mysql.connector.connect(
+        user=db_username,
+        password=db_password,
+        host=db_host,
+        database=db_name
+    )
 
 
 def main():
