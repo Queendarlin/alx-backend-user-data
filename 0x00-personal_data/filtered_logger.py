@@ -111,7 +111,7 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
     return connection
 
 
-def log_user_data():
+def main():
     """
     Logs to a secure holberton database to read a users table.
     """
@@ -136,4 +136,4 @@ def log_user_data():
 
 
 if __name__ == "__main__":
-    log_user_data()
+    main()
