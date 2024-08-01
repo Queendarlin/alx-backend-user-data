@@ -115,16 +115,25 @@ def log_user_data():
     """
     Logs to a secure holberton database to read a users table.
     """
-    logger = get_logger()
-    db = get_db()
-    cursor = db.cursor()
+    fields = "name,email,phone,ssn,password,ip,last_login,user_agent"
+    columns = fields.split(',')
+    query = f"SELECT {fields} FROM users;"
+    info_logger = get_logger()
+    connection = get_db()
 
-    cursor.execute("SELECT * FROM users;")
-    columns = [desc[0] for desc in cursor.description]
-    for row in cursor:
-        record = "; ".join(f"{columns[i]}={row[i]}"
-                           for i in range(len(columns)))
-        logger.info(record)
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        for row in rows:
+            record = map(
+                lambda x: f'{x[0]}={x[1]}',
+                zip(columns, row),
+            )
+            msg = '; '.join(list(record)) + ';'
+            args = ("user_data", logging.INFO, None, None, msg, None, None)
+            log_record = logging.LogRecord(*args)
+            info_logger.handle(log_record)
 
-    cursor.close()
-    db.close()
+
+if __name__ == "__main__":
+    log_user_data()
