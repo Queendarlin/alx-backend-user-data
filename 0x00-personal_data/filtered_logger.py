@@ -103,10 +103,10 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
     Raises:
         ValueError: If critical environment variables are not set.
     """
-    db_username = os.getenv('PERSONAL_DATA_DB_USERNAME')
-    db_password = os.getenv('PERSONAL_DATA_DB_PASSWORD')
-    db_host = os.getenv('PERSONAL_DATA_DB_HOST')
-    db_name = os.getenv('PERSONAL_DATA_DB_NAME')
+    db_username = os.getenv('PERSONAL_DATA_DB_USERNAME', 'root')
+    db_password = os.getenv('PERSONAL_DATA_DB_PASSWORD', '')
+    db_host = os.getenv('PERSONAL_DATA_DB_HOST', 'localhost')
+    db_name = os.getenv('PERSONAL_DATA_DB_NAME', 'holberton')
 
     # Check if db_name is set, as it's required
     if not db_name:
