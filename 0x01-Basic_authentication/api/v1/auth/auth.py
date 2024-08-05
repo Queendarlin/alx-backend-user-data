@@ -6,10 +6,9 @@ Module to manage API authentication
 from flask import request
 from typing import List, TypeVar
 
-User = TypeVar('User')
-
 
 class Auth:
+    """Class for authentication"""
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """ Returns True if authentication is required for the given path
         """
@@ -20,11 +19,9 @@ class Auth:
         """
         if request is None:
             return None
-        return None
 
     def current_user(self, request=None) -> User:
         """ Returns the current user from the request
         """
         if request is None:
             return None
-        return None
