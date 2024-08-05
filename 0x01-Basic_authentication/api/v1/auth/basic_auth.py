@@ -2,7 +2,7 @@
 """Module for basic authentication"""
 
 import re
-from .auth import Auth
+from api.v1.auth.auth import Auth
 
 
 class BasicAuth(Auth):
@@ -16,15 +16,3 @@ class BasicAuth(Auth):
             if field_match is not None:
                 return field_match.group('token')
         return None
-
-
-
-a = BasicAuth()
-
-print(a.extract_base64_authorization_header(None))
-print(a.extract_base64_authorization_header(89))
-print(a.extract_base64_authorization_header("Holberton School"))
-print(a.extract_base64_authorization_header("Basic Holberton"))
-print(a.extract_base64_authorization_header("Basic SG9sYmVydG9u"))
-print(a.extract_base64_authorization_header("Basic SG9sYmVydG9uIFNjaG9vbA=="))
-print(a.extract_base64_authorization_header("Basic1234"))
