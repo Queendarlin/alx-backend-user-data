@@ -10,6 +10,7 @@ import os
 from api.v1.auth.auth import Auth
 from api.v1.auth.basic_auth import BasicAuth
 from api.v1.auth.session_auth import SessionAuth
+from api.v1.auth.session_exp_auth import SessionExpAuth
 
 
 app = Flask(__name__)
@@ -18,13 +19,12 @@ CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 
 auth = None
 auth_type = getenv("AUTH_TYPE")
-if auth_type:
-    auth = Auth()
 if auth_type == 'basic_auth':
     auth = BasicAuth()
-if auth_type == "session_auth":
+elif auth_type == 'session_auth':
     auth = SessionAuth()
-
+elif auth_type == 'session_exp_auth':
+    auth = SessionExpAuth()
 
 @app.errorhandler(404)
 def not_found(error) -> str:
