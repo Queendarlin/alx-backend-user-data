@@ -2,6 +2,7 @@
 """ Module for Session authentication class"""
 
 from api.v1.auth.auth import Auth
+from .auth import Auth
 
 
 class SessionAuth(Auth):
