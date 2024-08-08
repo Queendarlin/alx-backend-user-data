@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """ Module for User sessions"""
-import uuid
+
 from models.base import Base
 
 
