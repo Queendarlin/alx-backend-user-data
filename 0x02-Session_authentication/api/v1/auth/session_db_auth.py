@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """ Module for database session authentication"""
 
-from flask import request
 from datetime import datetime, timedelta
 from api.v1.auth.session_exp_auth import SessionExpAuth
 from models.user_session import UserSession
