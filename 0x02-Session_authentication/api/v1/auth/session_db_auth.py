@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """ Module for database session authentication"""
 
+from flask import request
+from datetime import datetime, timedelta
 from api.v1.auth.session_exp_auth import SessionExpAuth
 from models.user_session import UserSession
 
@@ -15,25 +17,32 @@ class SessionDBAuth(SessionExpAuth):
         and returns the Session ID
         """
         session_id = super().create_session(user_id)
-        if session_id is None:
-            return None
-        user_session = UserSession(user_id=user_id, session_id=session_id)
-        user_session.save()
-        return session_id
+        if type(session_id) == str:
+            kwargs = {
+                'user_id': user_id,
+                'session_id': session_id,
+            }
+            user_session = UserSession(**kwargs)
+            user_session.save()
+            return session_id
 
     def user_id_for_session_id(self, session_id=None):
         """
           Returns the User ID
           by requesting UserSession in the database based on session_id
         """
-        if session_id is None:
+        try:
+            sessions = UserSession.search({'session_id': session_id})
+        except Exception:
             return None
-
-        user_sessions = UserSession.search({'session_id': session_id})
-        if not user_sessions:
+        if len(sessions) <= 0:
             return None
-
-        return user_sessions[0].user_id
+        cur_time = datetime.now()
+        time_span = timedelta(seconds=self.session_duration)
+        exp_time = sessions[0].created_at + time_span
+        if exp_time < cur_time:
+            return None
+        return sessions[0].user_id
 
     def destroy_session(self, request=None):
         """

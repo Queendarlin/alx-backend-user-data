@@ -22,11 +22,11 @@ auth = None
 auth_type = getenv("AUTH_TYPE")
 if auth_type == 'basic_auth':
     auth = BasicAuth()
-if auth_type == 'session_auth':
+elif auth_type == 'session_auth':
     auth = SessionAuth()
-if auth_type == 'session_exp_auth':
+elif auth_type == 'session_exp_auth':
     auth = SessionExpAuth()
-if auth_type == 'session_db_auth':
+elif auth_type == 'session_db_auth':
     auth = SessionDBAuth()
 
 
