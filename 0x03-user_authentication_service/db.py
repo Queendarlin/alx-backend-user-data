@@ -45,16 +45,6 @@ class DB:
 
     def find_user_by(self, **kwargs) -> User:
         """Finds a user by arbitrary keyword arguments.
-
-        Args:
-            **kwargs: Arbitrary keyword arguments to filter users.
-
-        Returns:
-            The first User object found based on the filter criteria.
-
-        Raises:
-            NoResultFound: If no user is found with the given filter criteria.
-            InvalidRequestError: If the filter criteria are invalid.
         """
         try:
             user = self._session.query(User).filter_by(**kwargs).one()
@@ -63,3 +53,24 @@ class DB:
             raise NoResultFound("No user found with the attributes.")
         except InvalidRequestError:
             raise InvalidRequestError("Invalid filter criteria provided.")
+
+    def update_user(self, user_id: int, **kwargs) -> None:
+        """Updates a user's attributes in the database.
+        """
+        try:
+            # Find the user by user_id
+            user = self.find_user_by(id=user_id)
+
+            # Update user attributes
+            for key, value in kwargs.items():
+                if hasattr(user, key):
+                    setattr(user, key, value)
+                else:
+                    raise ValueError(f"Invalid attribute: {key}")
+
+            # Commit the changes to the database
+            self._session.commit()
+
+        except Exception as e:
+            self._session.rollback()
+            raise e
