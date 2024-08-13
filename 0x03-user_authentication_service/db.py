@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """DB module
 """
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, tuple_
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
@@ -56,12 +56,16 @@ class DB:
             NoResultFound: If no user is found with the given filter criteria.
             InvalidRequestError: If the filter criteria are invalid.
         """
-        try:
-            user = self._session.query(User).filter_by(**kwargs).first()
-        except TypeError:
-            raise InvalidRequestError
-
-        if not user:
-            raise NoResultFound
-
-        return user
+        fields, values = [], []
+        for key, value in kwargs.items():
+            if hasattr(User, key):
+                fields.append(getattr(User, key))
+                values.append(value)
+            else:
+                raise InvalidRequestError()
+        result = self._session.query(User).filter(
+            tuple_(*fields).in_([tuple(values)])
+        ).first()
+        if result is None:
+            raise NoResultFound()
+        return result
