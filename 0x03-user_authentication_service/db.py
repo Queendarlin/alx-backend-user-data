@@ -57,9 +57,11 @@ class DB:
             InvalidRequestError: If the filter criteria are invalid.
         """
         try:
-            user = self._session.query(User).filter_by(**kwargs).one()
-            return user
-        except NoResultFound:
-            raise NoResultFound("No user found with the attributes.")
-        except InvalidRequestError:
-            raise InvalidRequestError("Invalid filter criteria provided.")
+            user = self._session.query(User).filter_by(**kwargs).first()
+        except TypeError:
+            raise InvalidRequestError
+
+        if not user:
+            raise NoResultFound
+
+        return user
