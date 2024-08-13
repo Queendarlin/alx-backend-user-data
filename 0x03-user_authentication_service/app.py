@@ -26,10 +26,8 @@ def register_user() -> jsonify:
         Returns:
             jsonify: JSON response with success or error message.
     """
-    data = request.form
-
-    email = data.get("email")
-    password = data.get("password")
+    email = request.form.get("email")
+    password = request.form.get("password")
 
     if not email or not password:
         return jsonify({"message": "email and password are required"}), 400
